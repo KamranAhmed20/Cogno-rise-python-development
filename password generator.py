@@ -1,15 +1,15 @@
 import random
 import string
 
-def generate_password(length=10, use_letters=True, use_digits=True, use_symbols=True):
+def generate_password(length, use_letters, use_digits, use_symbols):
     """
-    Generate a random password based on user preferences.
+    Generate a random password based on specified criteria.
 
     Parameters:
-    - length (int): The length of the password.
-    - use_letters (bool): Whether to include letters in the password.
-    - use_digits (bool): Whether to include digits in the password.
-    - use_symbols (bool): Whether to include symbols in the password.
+    - length (int): Length of the generated password.
+    - use_letters (bool): Whether to include letters.
+    - use_digits (bool): Whether to include digits.
+    - use_symbols (bool): Whether to include symbols.
 
     Returns:
     - str: The generated password.
@@ -19,41 +19,62 @@ def generate_password(length=10, use_letters=True, use_digits=True, use_symbols=
     digits = string.digits
     symbols = string.punctuation
 
-    # Initialize selection based on user preferences
-    selection = ''
+    # Combine selected character types
+    characters = ''
     if use_letters:
-        selection += letters
+        characters += letters
     if use_digits:
-        selection += digits
+        characters += digits
     if use_symbols:
-        selection += symbols
+        characters += symbols
 
-    # Ensure selection is not empty
-    if not selection:
-        raise ValueError("At least one character type must be selected.")
+    # Ensure at least one character type is included
+    if not characters:
+        raise ValueError("You must select at least one type of character.")
 
-    # Generate the password
-    password = ''.join(random.choice(selection) for _ in range(length))
+    # Generate password
+    return ''.join(random.choice(characters) for _ in range(length))
 
-    return password
+def get_user_input():
+    """
+    Prompt user for the desired length and character types for the password.
+
+    Returns:
+    - tuple: (length, use_letters, use_digits, use_symbols)
+    """
+    # Get the length of the password from the user
+    while True:
+        try:
+            length = int(input("Enter the length of the password: "))
+            if length <= 0:
+                print("The length must be a positive number. Please try again.")
+            else:
+                break
+        except ValueError:
+            print("Invalid input. Please enter a numeric value.")
+
+    # Ask the user for character type preferences
+    use_letters = input("Include letters? (yes/no): ").strip().lower() == 'yes'
+    use_digits = input("Include digits? (yes/no): ").strip().lower() == 'yes'
+    use_symbols = input("Include symbols? (yes/no): ").strip().lower() == 'yes'
+
+    return length, use_letters, use_digits, use_symbols
 
 def main():
     """
-    Main function to execute the password generation and display.
+    Main function to execute the password generation based on user input.
     """
+    print("Welcome to the Password Generator!")
+    
+    # Get user preferences
+    length, use_letters, use_digits, use_symbols = get_user_input()
+
     try:
-        # Configuration
-        length = 12  # Specify the length of the password
-        use_letters = True
-        use_digits = True
-        use_symbols = True
-
-        # Generate and print the password
+        # Generate and display the password
         password = generate_password(length, use_letters, use_digits, use_symbols)
-        print("Generated Password:", password)
-
-    except ValueError as e:
-        print(e)
+        print(f"Your generated password is: {password}")
+    except ValueError as error:
+        print(error)
 
 if __name__ == "__main__":
     main()
