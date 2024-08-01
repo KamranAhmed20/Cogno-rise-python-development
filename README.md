@@ -1,0 +1,1 @@
+# Cogno_Rise_info_tech
